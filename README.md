@@ -4,10 +4,6 @@
 
 ## Overview
 
-...
-...
-...
-
 ## 👥 Contributors
 - cristian0527, Cristian
 - filip-sakel, Filip
