@@ -8,11 +8,11 @@ library(tidyverse)
 library(infer)
 library(ggplot2)
 library(dplyr)
-library(GGally)
+library(GGally) # 
 ```
 
 ```{r load-data, message=FALSE}
-wildfires <- read_csv("/Users/cristiancastellanos/Downloads/wildfires_2025.csv")
+wildfires <- read_csv("data/wildfires_2025.csv")
 ```
 
 ```{r}
