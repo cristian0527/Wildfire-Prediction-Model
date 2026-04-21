@@ -4,3 +4,22 @@ The Wildfire CSV data is taken from [Kaggle](https://www.kaggle.com/datasets/fir
 
 ### Primary Sources
 GRIDMET (or gridMET) is a "dataset of daily high-spatial-resolution [...] covering the contiguous United States." Also, the "Integrated Reporting of Wildland Fire Information (IRWIN) is a Wildland Fire Information and Technology (WFIT) affiliated investment intended to provide an “end-to-end” fire reporting capability." Hence, our Kaggle dataset combines high-quality metereological data with descriptions of wildfire ignition events. While GRIDMET provides daily data, we couldn't find any guarantees that IRWIN includes all wildfire indicidents. Nevertheless, the IRWIN dataset appears robust and puts significant emphasis on removing duplicate incidents and providing high-resolution ignition data.
+
+### Codebook
+| Variable | Name                         | Units  | Description                                                                                                                               |
+| -------- | ---------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `pr`     | Precipitation                | mm/day | Total daily precipitation (including rain and snow). Higher precipitation tends to increase fuel moisture and thus reduce wildfire risk.                        |
+| `rmax`   | Maximum Relative Humidity    | %      | Highest daily relative humidity. This is the peak atmospheric moisture; higher relative humidity reduces fire intensity.                               |
+| `rmin`   | Minimum Relative Humidity    | %      | Lowest daily relative humidity. Low-humidity areas are more likely to have dried-out fuel which increases ignition risk and the potential of the fire to spread.                   |
+| `sph`    | Specific Humidity            | kg/kg  | Mass of water vapor per unit mass of air. Describes atmospheric moisture content independent of temperature.                               |
+| `srad`   | Solar Radiation              | W/m^2   | Incoming solar energy at the surface. Higher solar radiation promotes fuel dryness and increases surface temperatures and, hence, ignition risk.                                    |
+| `tmmn`   | Minimum Temperature          | °C     | Lowest daily air temperature. Affects how much moisture fuel can retain overnight.                                                  |
+| `tmmx`   | Maximum Temperature          | °C     | Highest daily air temperature. Higher values promote dryness and increase ignition risk.                                                        |
+| `vs`     | Wind Speed                   | m/s    | Average wind speed. Strong winds tends to increase fire intensity and contribute to fires spreading.                                                       |
+| `bi`     | Burning Index                | Index  | Fire danger index (based on factors like fuel conditions and weather). Higher values correspond to harder fire control.                              |
+| `fm100`  | 100-hour Fuel Moisture       | %      | Moisture content of medium-sized fuels, such as small branches. Affected by weather after approximately [100 hours](https://www.nwcg.gov/publications/pms437/fuel-moisture/dead-fuel-moisture-content).                                       |
+| `fm1000` | 1000-hour Fuel Moisture      | %      | Moisture content of large fuels, such as logs. Changes slowly, responding to the weather after approximately 1000 hours (associated with long-term dry conditions).                                    |
+| `erc`    | Energy Release Component     | Index  | Composite index describing potential heat output from a fire. Higher values correspond to more intense ignition events.                                |
+| `etr`    | Reference Evapotranspiration | mm/day | Estimated water loss from a reference surface, such as grass. Describes how much moisture the atmosphere can absorb.                                    |
+| `pet`    | Potential Evapotranspiration | mm/day | Maximum possible evapotranspiration under ideal conditions. Indicates how dry the environment can become.                                |
+| `vpd`    | Vapor Pressure Deficit       | kPa    | Difference between actual and saturated vapor pressure. High VPD shows that there's dry air and strong evaporative demand. |

@@ -84,6 +84,7 @@ for (var in int_vars) {
 
 
 ```{r}
+# wildfires_clean <- read_csv("data/wildfires_clean2025_py.csv")
 wildfires_clean <- wildfires_clean %>%
   mutate(region = case_when(
     # northeast: New England + Mid-Atlantic
