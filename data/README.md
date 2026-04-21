@@ -23,3 +23,6 @@ GRIDMET (or gridMET) is a "dataset of daily high-spatial-resolution [...] coveri
 | `etr`    | Reference Evapotranspiration | mm/day | Estimated water loss from a reference surface, such as grass. Describes how much moisture the atmosphere can absorb.                                    |
 | `pet`    | Potential Evapotranspiration | mm/day | Maximum possible evapotranspiration under ideal conditions. Indicates how dry the environment can become.                                |
 | `vpd`    | Vapor Pressure Deficit       | kPa    | Difference between actual and saturated vapor pressure. High VPD shows that there's dry air and strong evaporative demand. |
+| `latitude`    | Latitude       | Degrees    | The geographic coordinate of the ignition event that specifies the north-south position of a point on the surface of the Earth |
+| `longitude`    | Longitude       | Degrees    | The geographic coordinate of the ignition event that specifies the east-west position of a point on the surface of the Earth |
+| `datetime`    | Date       | YYYY-MM-DD    | The date each observation describes. Either sourced from positive events or synthesized to complete the 75-day window. |
