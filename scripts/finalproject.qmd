@@ -1,0 +1,216 @@
+---
+title: "MATH 244: final project"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(infer)
+library(ggplot2)
+library(dplyr)
+library(GGally)
+```
+
+```{r load-data, message=FALSE}
+wildfires <- read_csv("/Users/cristiancastellanos/Downloads/wildfires_2025.csv")
+```
+
+```{r}
+dim(wildfires)
+# 19210 x 20
+colnames(wildfires)
+```
+
+```{r, message=FALSE}
+wildfires %>%
+  select(bi, vpd, tmmx, pr, fm100, rmin, vs, srad) %>%
+  ggpairs()
+```
+
+```{r}
+# str(wildfires) # -> check data types, all values are there
+#anyNA(wildfires) -> false
+#sum(is.na(wildfires))
+```
+
+```{r, message=FALSE}
+
+#int_vars <- wildfires %>% select(where(is.numeric)) %>% names()
+
+#for (var in int_vars) {
+#  p <- ggplot(wildfires, aes(x = "", y = .data[[var]])) +
+#    geom_boxplot(fill = "steelblue", alpha = 0.7) +
+#    labs(title = paste("Boxplot of", var), x = NULL, y = var) +
+#    theme_bw()
+  
+#  print(p)
+#}
+
+```
+
+```{r}
+summary(wildfires %>% select(bi, vpd, tmmx, pr, fm100, rmin, vs, srad))
+```
+
+```{r}
+wildfires_clean <- wildfires %>%
+  filter(!if_any(everything(), ~ . == 32767))
+```
+
+```{r}
+nrow(wildfires)        # original
+nrow(wildfires_clean)  # after removing
+nrow(wildfires) - nrow(wildfires_clean)  # rows dropped
+```
+
+```{r, message=FALSE}
+wildfires_clean %>%
+  select(bi, vpd, tmmx, pr, fm100, rmin, vs, srad) %>%
+  ggpairs()
+```
+
+```{r}
+int_vars <- wildfires_clean %>% select(where(is.numeric)) %>% names()
+
+for (var in int_vars) {
+  p <- ggplot(wildfires_clean, aes(x = "", y = .data[[var]])) +
+    geom_boxplot(fill = "steelblue", alpha = 0.7) +
+    labs(title = paste("Boxplot of", var), x = NULL, y = var) +
+    theme_bw()
+  
+  print(p)
+}
+```
+
+
+```{r}
+wildfires_clean <- wildfires_clean %>%
+  mutate(region = case_when(
+    # northeast: New England + Mid-Atlantic
+    latitude >= 37 & latitude <= 47.5 & longitude >= -80 & longitude <= -66.9 ~ "Northeast",
+    
+    # south: Southeast + South Central
+    latitude >= 24 & latitude < 37 & longitude >= -100 & longitude <= -75 ~ "South",
+    
+    # midwest: Great Lakes + Plains
+    latitude >= 36.5 & latitude <= 49 & longitude >= -104 & longitude < -80 ~ "Midwest",
+    
+    # southwest: AZ, NM, CO, UT, NV
+    latitude >= 31 & latitude <= 42 & longitude >= -125 & longitude < -104 ~ "Southwest",
+    
+    # pacific: CA, OR, WA + AK, HI
+    latitude >= 32 & latitude <= 49 & longitude >= -125 & longitude < -114 ~ "Pacific",
+    
+    TRUE ~ "other"  # catch anything unclassified
+  ))
+```
+
+
+```{r}
+table(wildfires_clean$region)
+
+# check for anything unclassified
+wildfires_clean %>% filter(region == "other") %>% 
+  select(latitude, longitude) %>% summary()
+
+```
+```{r}
+write.csv(wildfires_clean, file = "~/Desktop/wildfires_clean2025.csv", row.names = FALSE)
+```
+
+
+```{r}
+ggplot(wildfires_clean, aes(x = longitude, y = latitude, color = region)) +
+  geom_point(alpha = 0.3, size = 0.5) +
+  borders("state") +
+  coord_fixed(1.3) +
+  theme_bw() +
+  labs(title = "Wildfire Observations by Region")
+```
+
+
+```{r}
+ggplot(wildfires_clean, aes(x = region, y = bi, fill = region)) +
+  geom_boxplot() +
+  theme_bw() +
+  labs(title = "Burning Index by Region")
+
+```
+
+```{r}
+wildfires_clean <- wildfires_clean %>%
+  mutate(
+    Date = as.Date(datetime),   # convert first
+    month = month(Date, label = TRUE),
+    season = case_when(
+      month(Date) %in% c(12, 1, 2)  ~ "Winter",
+      month(Date) %in% c(3, 4, 5)   ~ "Spring",
+      month(Date) %in% c(6, 7, 8)   ~ "Summer",
+      month(Date) %in% c(9, 10, 11) ~ "Fall"
+    )
+  )
+```
+
+```{r}
+head(wildfires_clean %>% select(Date, month, season))
+```
+```{r}
+```
+
+
+```{r}
+ggplot(wildfires_clean, aes(x = month, y = bi, fill = month)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(legend.position = "none") +
+  labs(title = "Burning Index by Month")
+```
+
+```{r}
+california <- wildfires_clean %>%
+  filter(latitude >= 32.5 & latitude <= 42.0,
+         longitude >= -124.5 & longitude <= -114.0)
+
+nrow(california)  # rows
+
+```
+
+```{r}
+ggplot(california, aes(x = month, y = bi, fill = month)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(legend.position = "none") +
+  labs(title = "Burning Index by Month — California",
+       x = "Month", y = "Burning Index (BI)")
+```
+
+```{r}
+california %>% count(month)
+```
+
+```{r, message=FALSE}
+california %>%
+  select(bi, vpd, tmmx, pr, fm100, rmin, vs, srad) %>%
+  ggpairs()
+```
+
+```{r}
+unique(california$Wildfire)
+```
+
+
+```{r}
+california_filtered <- california %>%
+  filter(Wildfire == "Yes")
+```
+
+```{r}
+california_filtered
+```
+
+```{r, message=FALSE}
+california_filtered %>%
+  select(bi, vpd, tmmx, pr, fm100, rmin, vs, srad) %>%
+  ggpairs()
+```
+
