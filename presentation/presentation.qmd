@@ -82,7 +82,7 @@ We fit a foward neural network to compare results to our linear regression model
 # Discussion
 
 ## Training Curve of the Neural Network
-![](training_curve.png){fig-align="center" width=120% height=500px}
+![](training_curve.png){fig-align="center" width=85% height=350px}
 
 ::: {style="font-size: 0.7em"}
 - Loss drops sharply in the first ~10 epochs, capturing most signal quickly
