@@ -38,6 +38,8 @@ format: revealjs
 
 ## Final Selected Variables
 
+- Longitude
+- Latitude
 - Solar radiation (srad)
 - Fuel moisture indices (fm100)
 - Vapor pressure deficit (vpd)
@@ -110,7 +112,6 @@ We fit a foward neural network to compare results to our linear regression model
 
 ## Limitations
 - We predict Burning Index, not actual ignition. A high BI day does not guarantee a wildfire
-- Performance was evaluated at a national level, so results may vary by region (e.g., dry Southwest vs. humid Southeast)
 - We used a 100 epoch ceiling rather than early stopping. Using ~50 epochs likely would have been sufficient based on the training curve
 - Our model treats each day independently and does not explicitly model the 75-day sequence window in the dataset
   
