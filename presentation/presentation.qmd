@@ -68,6 +68,9 @@ We fit a foward neural network to compare results to our linear regression model
 - Activation: ReLU at each hidden layer
 - Trained up to 100 epochs
 
+## Diagram of Neural Network
+![](neuralnetwork_diagram.jpg){fig-align="center" width=120% height=500px}
+
 ## Neural Network Results
 
 | Model | Test R-squared | RMSE | Mean Absolute Error | 
