@@ -1,0 +1,122 @@
+---
+title: "Predicting Wildfire Burning Index using Machine Learning Models"
+author: "Cristian & Filip"
+format: revealjs
+---
+
+
+# Introduction & Motivation
+
+# Overview of the Data
+
+# EDA Highlights
+
+# Inference & Modeling
+
+## Predicting Burning Index (BI)
+
+- **Response variable:** Burning Index (BI) — a measure of wildfire difficulty
+- **Predictors:** Environmental variables from GRIDMET
+  - Excluded Energy release component (ERC), which is used to compute BI, and Evapotranspiration (feeds into ERC)
+- **Goal:** Predict BI from daily meteorological conditions
+
+## Step 1 — LASSO for Variable Selection
+
+- Fit an initial LASSO regression across all possible predictors
+- Examined strip plots of coefficients to assess variable influence
+- Variables who clustered near zero means they have low influence, so removed them from final variable selection
+- LASSO shrinkage gave us a clean first pass at which variables matter
+
+## Step 2 — Checking Multicollinearity
+
+- Environmental variables are often correlated, such as temperature & humidity
+- Ran Variance Inflation Factor (VIF) tests on LASSO-selected variables
+- Fine-tuned variable selection and ran VIF tests until variables were ideally <= 5
+- This ensures our final model coefficients are stable and still be understandable without the influence of highly correlated predictors inflating variance
+
+ 
+
+## Final Selected Variables
+
+- Solar radiation (srad)
+- Fuel moisture indices (fm100)
+- Vapor pressure deficit (vpd)
+- Wind speed (vs)
+- Precipitation (pr)
+- Specific humidity (sph)
+
+## Step 3 — OLS vs. Ridge vs. LASSO
+
+After finalizing variables, we compared three linear models:
+
+| Model | R-squared | RMSE | Mean Absolute Error | 
+|-------|----|------|-------|
+| OLS   | 0.7266 | 12.9881 | 9.0110 | 
+| Ridge | 0.7266 | 12.9882 | 9.0114 | 
+| LASSO | 0.7266 | 12.9868 | 9.0108 | 
+
+
+All of our linear regression models perform nearly identically, which suggests our selected variables are overall well suited and regularization offers little additional benefit here.
+
+
+## Step 4 — Neural Network
+
+We fit a foward neural network to compare results to our linear regression models
+
+- Activation: ReLU at each hidden layer
+- Trained up to 100 epochs
+
+## Neural Network Results
+
+| Model | Test R-squared | RMSE | Mean Absolute Error | 
+|-------|----|------|-------|
+| Neural Network   | 0.9653 | 4.6238 | 3.0590 | 
+
+- R-squared jumped from 0.73 to 0.96 over linear models
+
+# Discussion
+
+## Training Curve of the Neural Network
+![](training_curve.png){fig-align="center" width=120% height=500px}
+
+::: {style="font-size: 0.7em"}
+- Loss drops sharply in the first ~10 epochs, capturing most signal quickly
+- Train and validation loss track closely, which shows no sign of overfitting
+- After ~50 epochs, improvement begins to plateau
+- Running to 100 epochs was likely unnecessary — ~50 epochs may suffice
+:::
+
+## Model Comparison
+
+| Model | Train R-squared | Test R-squared | RMSE | MAE |
+|-------|----------|---------|------|-----|
+| OLS | 0.7165 | 0.7266 | 12.9881 | 9.0110 |
+| Ridge | 0.7165 | 0.7266 | 12.9882 | 9.0114 |
+| LASSO | 0.7165 | 0.7266 | 12.9868 | 9.0108 |
+| Neural Network | 0.9686 | 0.9653 | 4.6238 | 3.0590 |
+
+::: {style="font-size: 0.75em;"}
+- NN explained 23.87% more variance, which is a meaningful jump in predictive power, as mentioned in the prior slide
+- RMSE cut nearly in third compared to linear models
+- The non-linear (ReLU) relationships in climate data may help capture patterns that linear models cannot
+:::
+
+## Interpretation
+
+- The linear regression models (OLS, Ridge, LASSO) explain approximately 72.66% of the variance in Burning Index (R-squared = 0.7266), suggesting a moderately strong linear relationship between the meteorological predictors and Burning Index
+- The Neural 's ability to learn non-linear (ReLU) relationships likely explains the substantial performance gap, raising explained variance to 96.53%
+- Similar train/test R-squared (0.9686 vs 0.9653) suggests the model generalizes well to unseen data across the US wildfires in 2024
+
+
+## Limitations
+- We predict Burning Index, not actual ignition. A high BI day does not guarantee a wildfire
+- Performance was evaluated at a national level, so results may vary by region (e.g., dry Southwest vs. humid Southeast)
+- We used a 100 epoch ceiling rather than early stopping. Using ~50 epochs likely would have been sufficient based on the training curve
+- Our model treats each day independently and does not explicitly model the 75-day sequence window in the dataset
+  
+## Conclusion
+
+- With more time, we'd explore early stopping in our neural network and leverage the full 75-day time frame into our models. 
+- Overall, the meteorological variables we used are moderately strong predictors.
+
+## Thank You 
