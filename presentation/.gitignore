@@ -1,4 +1,2 @@
-presentation_files
+*_files/
 *.html
-*.quarto_ipynb
-env/

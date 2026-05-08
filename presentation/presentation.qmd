@@ -3,11 +3,6 @@ title: "Predicting Wildfire Intensity and Locations"
 subtitle: "Cristian Castellanos, Filip Sakellariou 4/30/26"
 format: revealjs
 jupyter: python3
-# jupyter: 
-#     kernelspec:
-#         name: "conda-env-math241-py"
-#         language: "python"
-#         display_name: "math241"
 ---
 
 # Motivation
